@@ -1,0 +1,6 @@
+node_modules/
+out/
+tools/
+screenshots/smoke-*
+package-lock.json
+check-imports.mjs
