@@ -86,6 +86,7 @@ export function createViewModel(camera) {
 // Per-frame viewmodel motion: idle sway, move bob, fire kick, reload dip.
 export function animateViewModel(vm, weaponState, playerState, dt, lookDx, lookDy) {
   const { root, models, flashLight, shell } = vm;
+  let shellLife = vm.getShellLife();
   for (const model of models.values()) model.visible = false;
   const model = models.get(weaponState.weapon.id);
   if (model) model.visible = true;
@@ -114,6 +115,7 @@ export function animateViewModel(vm, weaponState, playerState, dt, lookDx, lookD
   // Shell ejects on each shot, tumbles and fades.
   if (shellLife > 0) {
     shellLife -= dt;
+    vm.setShellLife(shellLife);
     shell.visible = true;
     shellLife > 0.12 ? shell.position.set(shell.position.x + dt * 1.6, shell.position.y + dt * 0.9 - 0.03, shell.position.z + dt * 0.4)
       : shell.visible = false;
