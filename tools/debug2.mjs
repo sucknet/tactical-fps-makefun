@@ -1,0 +1,11 @@
+import { chromium } from 'playwright';
+import { existsSync } from 'node:fs';
+const CHROME = ['C:/Program Files/Google/Chrome/Application/chrome.exe'].find(p=>existsSync(p));
+const browser=await chromium.launch({executablePath:CHROME,headless:true,args:['--use-angle=default','--enable-unsafe-swiftshader']});
+const page=await browser.newPage({viewport:{width:1280,height:720}});
+page.on('console',m=>{const t=m.text(); if(t.includes('404')||t.includes('Failed')) console.log('[console]',t.slice(0,300))});
+page.on('pageerror',e=>console.log('[pageerror]',String(e).slice(0,500)));
+page.on('response',r=>{if(r.status()>=400)console.log('[http'+r.status()+']',r.url())});
+await page.goto('http://localhost:8125/index.html',{waitUntil:'load'});
+await new Promise(r=>setTimeout(r,3000));
+await browser.close(); process.exit(0);
